@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -54,17 +55,50 @@ public class LetterFrequencies {
             System.out.printf("%c %3d %.2f%n", c, frequency, englishFrequency);
         }
 
-        //Taking substitution input from the user for all characters present in the cipher text.
+        boolean substitutionSuccess = false;
+
+        while(!substitutionSuccess)
+        {
+        // Predefined substitution set
+        char[] predefinedSubstitutionSet = {'C', 'O', 'M', 'N', 'S', 'E', 'I', 'T'};
+        shuffleArray(predefinedSubstitutionSet);
+    
+
+        // Creating the substitution map using the predefined set
         Map<Character, Character> substitutionMap = new HashMap<>();
+        int predefinedIndex = 0;
+        
         for (char c : sortedFrequencyMap.keySet()) {
-            System.out.printf("What letter do you think '%c' corresponds to in the English language? ", c);
-            String substitutionInput = scanner.nextLine();
-            //Avoiding out of bounds exception in case there is no substitution provided, we assume it to be ' '
-            char substitution = (substitutionInput.isEmpty()) ? ' ' : Character.toUpperCase(substitutionInput.charAt(0));
+            char substitution = (c == ',') ? ' ' : predefinedSubstitutionSet[predefinedIndex++];
             substitutionMap.put(c, substitution);
+
         }
 
-        System.out.println("\nThe original letters with their substituted letters are:");
+
+        for (char c : sortedFrequencyMap.keySet()) {
+            System.out.printf("What letter do you think '%c' corresponds to in the English language? %c \n", c, substitutionMap.get(c));
+        }
+
+        
+        // Performing substitutions
+        StringBuilder substitutedText = new StringBuilder();
+        for (char c : cipherText.toCharArray()) {
+            if (Character.isLetter(c) || c == ',') {
+                 char substitutedChar = substitutionMap.getOrDefault(Character.toUpperCase(c), c);
+                 substitutedText.append(Character.isLowerCase(c) ? Character.toLowerCase(substitutedChar) : substitutedChar);
+                } else {
+                    substitutedText.append(c);
+                }
+            }
+            System.out.println("\nAfter Substitution = \"" + substitutedText.toString() + "\"");
+
+        // Ask the user for confirmation
+        System.out.print("Is the substitution correct? (yes/no): ");
+        String userConfirmation = scanner.nextLine().trim().toLowerCase();
+
+        if (userConfirmation.equals("yes")) {
+            substitutionSuccess = true;
+            System.out.println("\nThe original letters with their substituted letters are:");
         
         // Printing the original letters present in the cipher text along with their substituted letters.
         System.out.print("Key: {");
@@ -77,21 +111,11 @@ public class LetterFrequencies {
             firstSubstitution = false;
         }
         System.out.println("}");
-
-
-        // Performing substitutions
-        StringBuilder substitutedText = new StringBuilder();
-        for (char c : cipherText.toCharArray()) {
-            if (Character.isLetter(c) || c == ',') {
-                char substitutedChar = substitutionMap.getOrDefault(Character.toUpperCase(c), c);
-                substitutedText.append(Character.isLowerCase(c) ? Character.toLowerCase(substitutedChar) : substitutedChar);
-            } else {
-                substitutedText.append(c);
-            }
-        }
-
-        System.out.println("\nAfter Substitution = \"" + substitutedText.toString() + "\"");
-        scanner.close();
+        
+            System.out.println("Substitution success! Decrypted text = \"" + substitutedText.toString() + "\"");
+        } 
+    }
+            scanner.close();
     }
       // Define a map to store English letter frequencies
       private static double getEnglishFrequency(char c) {
@@ -124,5 +148,16 @@ public class LetterFrequencies {
         letterFrequencies.put('Z', 0.07);
         
         return letterFrequencies.getOrDefault(Character.toUpperCase(c), 0.0);
+    }
+
+    // Shuffle an array using Fisher-Yates algorithm
+    private static void shuffleArray(char[] array) {
+        Random rand = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = rand.nextInt(i + 1);
+            char temp = array[index];
+            array[index] = array[i];
+            array[i] = temp;
+        }
     }
 }
