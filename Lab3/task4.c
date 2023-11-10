@@ -8,18 +8,14 @@ unsigned char Y[200] = {
 
 int main()
 {
-bool areEqual = true;
 for (int i = 0; i < 200; i++) {
- if (X[i] != Y[i]) {
-          areEqual = false;
-          break;
+ if (X[i] == Y[i]) {
+          printf("X[i] = %.2x, Y[i] = %.2x",X[i],Y[i]);
+          printf("Running benign code..\n");
+          return 0;
    }
- }
-   if (areEqual) {
-        // Run benign code
-       printf("Running benign code.\n");
- } else {
-     // Run malicious code
-     printf("Running malicious code.\n");
-  }
+  printf("X[i] = %.2x, Y[i] = %.2x",X[i],Y[i]);
+  printf("Running malicious code...\n");
+ } 
+ return 0;
 }
