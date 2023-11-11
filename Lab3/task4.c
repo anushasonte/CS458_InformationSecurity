@@ -8,13 +8,12 @@ unsigned char Y[200] = {
 int main()
 {
 for (int i = 0; i < 200; i++) {
- if (X[i] == Y[i]) {
+ if (X[i] != Y[i]) {
           printf("X[i] = %.2x, Y[i] = %.2x\n",X[i],Y[i]);
-          printf("Running benign code..\n");
+          printf("Running malicious code..\n");
           return 0;
    }
  } 
- printf("X[i] = %.2x, Y[i] = %.2x\n",X[i],Y[i]);
- printf("Running malicious code...\n");
+ printf("Running benign code...\n");
  return 0;
 }
