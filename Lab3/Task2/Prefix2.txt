@@ -1,0 +1,1 @@
+The goal of this task is to understand the properties of MD5. That is, if inputs M and N have the same hash, adding the same suffix T to them will result in two outputs that have the same hash value.
